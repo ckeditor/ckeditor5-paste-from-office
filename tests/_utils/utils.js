@@ -156,7 +156,7 @@ function generateNormalizationTests( title, fixtures, editorConfig, skip ) {
 				} );
 
 				expectNormalized(
-					pasteFromOfficePlugin._normalizeWordInput( fixtures.input[ name ], dataTransfer ),
+					pasteFromOfficePlugin._normalizeClipboardData( fixtures.input[ name ], dataTransfer ),
 					fixtures.normalized[ name ]
 				);
 			} );

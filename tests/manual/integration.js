@@ -13,6 +13,8 @@ import Underline from '@ckeditor/ckeditor5-basic-styles/src/underline';
 import Table from '@ckeditor/ckeditor5-table/src/table';
 import TableToolbar from '@ckeditor/ckeditor5-table/src/tabletoolbar';
 import EasyImage from '@ckeditor/ckeditor5-easy-image/src/easyimage';
+import ShiftEnter from '@ckeditor/ckeditor5-enter/src/shiftenter';
+import Alignment from '@ckeditor/ckeditor5-alignment/src/alignment';
 import PasteFromOffice from '../../src/pastefromoffice';
 
 import { stringify as stringifyView } from '@ckeditor/ckeditor5-engine/src/dev-utils/view';
@@ -25,7 +27,7 @@ const dataDiv = document.querySelector( '#data' );
 
 ClassicEditor
 	.create( document.querySelector( '#editor' ), {
-		plugins: [ ArticlePluginSet, Strikethrough, Underline, Table, TableToolbar, EasyImage, PasteFromOffice ],
+		plugins: [ ArticlePluginSet, Strikethrough, Underline, Table, TableToolbar, EasyImage, PasteFromOffice, ShiftEnter, Alignment ],
 		toolbar: [ 'heading', '|', 'bold', 'italic', 'strikethrough', 'underline', 'link',
 			'bulletedList', 'numberedList', 'blockQuote', 'insertTable', 'undo', 'redo' ],
 		cloudServices: CS_CONFIG
@@ -37,20 +39,20 @@ ClassicEditor
 		editor.editing.view.document.on( 'paste', ( evt, data ) => {
 			console.clear();
 
-			console.log( '----- paste -----' );
-			console.log( data );
-			console.log( 'text/html\n', data.dataTransfer.getData( 'text/html' ) );
-			console.log( 'text/plain\n', data.dataTransfer.getData( 'text/plain' ) );
+			// console.log( '----- paste -----' );
+			// console.log( data );
+			// console.log( 'text/html\n', data.dataTransfer.getData( 'text/html' ) );
+			// console.log( 'text/plain\n', data.dataTransfer.getData( 'text/plain' ) );
 
 			htmlDiv.innerText = data.dataTransfer.getData( 'text/html' );
-			textDiv.innerText = data.dataTransfer.getData( 'text/plain' );
+			// textDiv.innerText = data.dataTransfer.getData( 'text/plain' );
 		} );
 
 		clipboard.on( 'inputTransformation', ( evt, data ) => {
-			console.log( '----- clipboardInput -----' );
-			console.log( 'stringify( data.dataTransfer )\n', stringifyView( data.content ) );
+			// console.log( '----- clipboardInput -----' );
+			// console.log( 'stringify( data.dataTransfer )\n', stringifyView( data.content ) );
 
-			dataDiv.innerText = stringifyView( data.content );
+			// dataDiv.innerText = stringifyView( data.content );
 		} );
 	} )
 	.catch( err => {

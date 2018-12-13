@@ -13,6 +13,7 @@ import Clipboard from '@ckeditor/ckeditor5-clipboard/src/clipboard';
 import { parseHtml } from './filters/parse';
 import { transformListItemLikeElementsIntoLists } from './filters/list';
 import { replaceImagesSourceWithBase64 } from './filters/image';
+import { stripGDocsWrapper, inlineListItemsContent, replaceBrsWithEmptyP, paragraphsToHeadings } from './filters/generic';
 
 /**
  * The Paste from Office plugin.
@@ -41,13 +42,28 @@ export default class PasteFromOffice extends Plugin {
 		this.listenTo( editor.plugins.get( Clipboard ), 'inputTransformation', ( evt, data ) => {
 			const html = data.dataTransfer.getData( 'text/html' );
 
-			if ( data.pasteFromOfficeProcessed !== true && isWordInput( html ) ) {
-				data.content = this._normalizeWordInput( html, data.dataTransfer );
+			if ( data.pasteFromOfficeProcessed !== true ) {
+				data.content = this._normalizeClipboardData( html, data.dataTransfer );
 
 				// Set the flag so if `inputTransformation` is re-fired, PFO will not process it again (#44).
 				data.pasteFromOfficeProcessed = true;
 			}
 		}, { priority: 'high' } );
+	}
+
+	// TODO docs
+	_normalizeClipboardData( input, dataTransfer ) {
+		const { body, stylesString } = parseHtml( input );
+
+		let normalizedBody = body;
+
+		if ( isWordInput( input ) ) {
+			normalizedBody = this._normalizeWordInput( normalizedBody, stylesString, dataTransfer );
+		} else {
+			normalizedBody = this._normalizeInput( normalizedBody, stylesString );
+		}
+
+		return normalizedBody;
 	}
 
 	/**
@@ -56,17 +72,30 @@ export default class PasteFromOffice extends Plugin {
 	 * **Note**: this function was exposed mainly for testing purposes and should not be called directly.
 	 *
 	 * @protected
-	 * @param {String} input Word input.
+	 // TODO body, stylesString
 	 * @param {module:clipboard/datatransfer~DataTransfer} dataTransfer Data transfer instance.
 	 * @returns {module:engine/view/documentfragment~DocumentFragment} Normalized input.
 	 */
-	_normalizeWordInput( input, dataTransfer ) {
-		const { body, stylesString } = parseHtml( input );
-
+	_normalizeWordInput( body, stylesString, dataTransfer ) {
 		transformListItemLikeElementsIntoLists( body, stylesString );
 		replaceImagesSourceWithBase64( body, dataTransfer.getData( 'text/rtf' ) );
 
 		return body;
+	}
+
+	// TODO docs
+	_normalizeInput( body, stylesString ) {
+		let normalizedBody = body;
+
+		// Google Docs filters
+		normalizedBody = stripGDocsWrapper( normalizedBody );
+		normalizedBody = inlineListItemsContent( normalizedBody );
+		normalizedBody = replaceBrsWithEmptyP( normalizedBody );
+
+		// Word 365 filters
+		normalizedBody = paragraphsToHeadings( normalizedBody );
+
+		return normalizedBody;
 	}
 }
 
