@@ -39,20 +39,20 @@ ClassicEditor
 		editor.editing.view.document.on( 'paste', ( evt, data ) => {
 			console.clear();
 
-			// console.log( '----- paste -----' );
-			// console.log( data );
-			// console.log( 'text/html\n', data.dataTransfer.getData( 'text/html' ) );
-			// console.log( 'text/plain\n', data.dataTransfer.getData( 'text/plain' ) );
+			console.log( '----- paste -----' );
+			console.log( data );
+			console.log( 'text/html\n', data.dataTransfer.getData( 'text/html' ) );
+			console.log( 'text/plain\n', data.dataTransfer.getData( 'text/plain' ) );
 
 			htmlDiv.innerText = data.dataTransfer.getData( 'text/html' );
-			// textDiv.innerText = data.dataTransfer.getData( 'text/plain' );
+			textDiv.innerText = data.dataTransfer.getData( 'text/plain' );
 		} );
 
 		clipboard.on( 'inputTransformation', ( evt, data ) => {
-			// console.log( '----- clipboardInput -----' );
-			// console.log( 'stringify( data.dataTransfer )\n', stringifyView( data.content ) );
+			console.log( '----- clipboardInput -----' );
+			console.log( 'stringify( data.dataTransfer )\n', stringifyView( data.content ) );
 
-			// dataDiv.innerText = stringifyView( data.content );
+			dataDiv.innerText = stringifyView( data.content );
 		} );
 	} )
 	.catch( err => {

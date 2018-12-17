@@ -16,9 +16,8 @@ export function stripGDocsWrapper( body ) {
 	if ( firstChild && firstChild.name === 'b' && firstChild.hasAttribute( 'id' ) &&
 		firstChild.getAttribute( 'id' ).includes( 'docs-internal-guid' ) ) {
 		const writer = new UpcastWriter();
-		const newRoot = writer.createDocumentFragment( Array.from( firstChild.getChildren() ) );
 
-		return newRoot;
+		return writer.createDocumentFragment( Array.from( firstChild.getChildren() ) );
 	}
 
 	return body;
@@ -57,7 +56,7 @@ export function replaceBrsWithEmptyP( body ) {
 	return body;
 }
 
-// TODO
+// TODO docs
 // <p role="heading" aria-level="1"
 export function paragraphsToHeadings( body ) {
 	const writer = new UpcastWriter();
@@ -92,10 +91,7 @@ function inlineLiContent( li, writer ) {
 	for ( const value of range ) {
 		const el = value.item;
 		if ( value.type === 'elementStart' && disallowTags.indexOf( el.name ) === -1 ) {
-			// if ( el.parent && childrenToMove.indexOf( el.parent ) === -1 ) {
-			// 	console.log( el );
 			allChildren.push( value.item );
-			// }
 		}
 	}
 
@@ -108,16 +104,9 @@ function inlineLiContent( li, writer ) {
 	writer.appendChild( contentWrapper, li );
 }
 
-// TODO docs
-// <li></li>
-// <li><br/></li>
-// <li><p><span><span></span></span><span> </span></p></li>
-export function preserveEmptyListItems() {
-
-}
-
 // Word online
 // - cannot recognize headers vs text in table cell - https://www.diffchecker.com/mMs6roxf
+// - empty list items are not preserved
 
 // Google Docs
-// - sometimes BRs inside list items are presented outside in clipboard data
+// - sometimes BRs inside list items are outside in clipboard data

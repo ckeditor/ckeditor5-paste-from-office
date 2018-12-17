@@ -84,7 +84,7 @@ export default class PasteFromOffice extends Plugin {
 	}
 
 	// TODO docs
-	_normalizeInput( body, stylesString ) {
+	_normalizeInput( body ) {
 		let normalizedBody = body;
 
 		// Google Docs filters
@@ -92,7 +92,7 @@ export default class PasteFromOffice extends Plugin {
 		normalizedBody = inlineListItemsContent( normalizedBody );
 		normalizedBody = replaceBrsWithEmptyP( normalizedBody );
 
-		// Word 365 filters
+		// Word Online filters
 		normalizedBody = paragraphsToHeadings( normalizedBody );
 
 		return normalizedBody;
